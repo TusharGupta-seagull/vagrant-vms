@@ -1,0 +1,33 @@
+Vagrant.configure("2") do |config|
+
+  # Web01 VM configuration
+  config.vm.define "web01" do |web01|
+    web01.vm.box = "ubuntu/bionic64"
+    web01.vm.network "private_network", ip: "192.168.56.31"
+    web01.vm.hostname = "web01"
+  end
+
+  # Web02 VM configuration
+  config.vm.define "web02" do |web02|
+    web02.vm.box = "ubuntu/bionic64"
+    web02.vm.network "private_network", ip: "192.168.56.33"
+    web02.vm.hostname = "web02"
+  end
+
+  # DB01 VM configuration
+  config.vm.define "db01" do |db01|
+    db01.vm.box = "centos/7"
+    db01.vm.network "private_network", ip: "192.168.56.35"
+    db01.vm.hostname = "db01"
+
+    # Provisioning for DB01
+    db01.vm.provision "shell", inline: <<-SCRIPT
+      # Your provisioning script for db01 goes here
+      # For example, installing MySQL or setting up a database
+	  yum install -y wget unzip mariadb-server -y 
+	  systemctl start mariadb
+	  systemctl enable mariadb
+    SCRIPT
+  end
+
+end
